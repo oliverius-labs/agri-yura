@@ -13,7 +13,7 @@ const treatments = [
     duration: "5 a 7 aplicaciones por ciclo del cultivo",
     provider: "AgroInsumos El Trigal",
     price: 150,
-    image: "/telefono3.webp",
+    image: "/public/img/telefono3.webp",
     severity: "alta",
   },
   {
@@ -26,7 +26,7 @@ const treatments = [
     duration: "Durante la etapa de plántula",
     provider: "Insumos Cafeteros S.A.",
     price: 80,
-    image: "/telefono4.webp",
+    image: "/public/img/telefono4.webp",
     severity: "alta",
   }
 ];
