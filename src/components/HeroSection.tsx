@@ -241,7 +241,7 @@ const HeroSection: React.FC = () => {
                       style={{ backgroundColor: `${brandColors.negro}10` }}
                     >
                       <img 
-                        src="/src/assets/img/telefono.jpeg" 
+                        src="/img/telefono.webp" 
                         alt="Vista de cultivo en la aplicación móvil"
                         className="w-full h-full object-cover"
                         style={{ objectPosition: 'center 100%' }}
