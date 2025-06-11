@@ -172,7 +172,7 @@ const HowItWorksSection: React.FC = () => {
   {/* Imagen */}
   <div className="flex-grow relative rounded-xl overflow-hidden flex items-center justify-center bg-black/5">
     <img 
-      src="/public/img/zapallo.webp" 
+      src="/img/zapallo.webp" 
       alt="Proceso de diagnóstico con inteligencia artificial en cultivos bolivianos" 
       className="object-contain w-full h-full"
       style={{ objectPosition: 'center top' }}
