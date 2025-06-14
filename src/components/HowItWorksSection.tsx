@@ -12,15 +12,15 @@ const steps = [
   },
   {
     title: "Diagnóstico con IA",
-    description: "Nuestra IA boliviana analiza la imagen y detecta la enfermedad de tu cultivo",
+    description: "El modelo de IA analiza la imagen y detecta la enfermedad en tu cultivo",
     icon: Brain,
     color: "text-blue-600",
     bgGradient: "from-blue-100 to-cyan-100",
     details: [""]
   },
   {
-    title: "Solución en minutos",
-    description: "Conectamos con expertos locales y agropecuarias que te ofrecen tratamientos específicos",
+    title: "Solución en segundos",
+    description: "Obtén un diagnóstico preliminar al instante, con la garantía de una verificación posterior por parte de nuestros expertos",
     icon: Clock,
     color: "text-emerald-600",
     bgGradient: "from-emerald-100 to-green-100",
@@ -172,7 +172,7 @@ const HowItWorksSection: React.FC = () => {
   {/* Imagen */}
   <div className="flex-grow relative rounded-xl overflow-hidden flex items-center justify-center bg-black/5">
     <img 
-      src="/img/zapallo.webp" 
+      src="/img/zapallo.png" 
       alt="Proceso de diagnóstico con inteligencia artificial en cultivos bolivianos" 
       className="object-contain w-full h-full"
       style={{ objectPosition: 'center top' }}
@@ -198,22 +198,24 @@ const HowItWorksSection: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="text-3xl font-bold text-gray-900">Inteligencia Artificial</h3>
-                  <p className="text-emerald-600 font-medium">trabajando para el campo boliviano</p>
+                  <p className="text-emerald-600 font-medium">al servicio del campo boliviano</p>
                 </div>
               </div>
+              <h3 className="text-3xl font-bold text-gray-900">¿Qué ofrece hoy? </h3>
               
               <p className="text-lg text-gray-700 leading-relaxed">
-                Nuestro algoritmo ha sido entrenado específicamente con miles de imágenes de cultivos 
-                bolivianos para reconocer con precisión los patrones de más de 50 enfermedades comunes 
-                en nuestro territorio.
+              Nuestro sistema utiliza inteligencia artificial para ofrecer diagnósticos preliminares basados en imágenes y síntomas visibles en los cultivos. Cada caso es revisado por expertos locales en fitopatología para asegurar recomendaciones más confiables.
+
+Estamos desarrollando una tecnología que se adaptará cada vez más al contexto agrícola boliviano.
               </p>
               
               <div className="grid sm:grid-cols-2 gap-4">
                 {[
-                  'Actualización constante del modelo',
-                  'Compatible con todos los cultivos principales',
-                  'Adaptado al clima boliviano',
-                  'Validado por expertos locales'
+                  'Análisis visual de síntomas con ayuda de IA',
+                  'Diagnóstico preliminar y recomendaciones iniciales',
+                  'Validación de cada caso por un agrónomo especializado',
+                  'Enfoque en enfermedades comunes de Bolivia',
+                  'Seguimos mejorando: entrenando nuestro propio modelo con imágenes de cultivos bolivianos para aumentar la precisión.'
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-3 bg-white/70 p-3 rounded-lg">
                     <CheckCircle2 className="text-emerald-600 w-5 h-5 flex-shrink-0" />

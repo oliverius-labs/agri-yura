@@ -105,7 +105,7 @@ const HeroSection: React.FC = () => {
                   className="text-2xl md:text-3xl xl:text-4xl font-semibold"
                   style={{ color: `${brandColors.negro}80` }}
                 >
-                  al instante y gratis
+                  gratuito e instantáneo
                 </span>
               </h1>
               
