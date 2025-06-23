@@ -14,6 +14,7 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitSuccess }) => {
   });
   
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -58,9 +59,10 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitSuccess }) => {
     e.preventDefault();
   
     if (validateForm()) {
+      setIsSubmitting(true);
+      
       try {
         const response = await fetch('https://n8n.joseiriarte.systems/webhook/af8be9e9-57b8-4327-8e28-02834951c7f2', {
-        // const response = await fetch('https://n8n.joseiriarte.systems/webhook-test/af8be9e9-57b8-4327-8e28-02834951c7f2', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -72,20 +74,25 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitSuccess }) => {
           throw new Error(`Error en el envío: ${response.statusText}`);
         }
   
-        // Opcional: puedes leer la respuesta si el webhook devuelve algo
-        // const data = await response.json();
-  
+        // Llamar al callback de éxito
         onSubmitSuccess();
-        // Opcional: limpiar formulario después de enviar
+        
+        // Limpiar formulario después de enviar
         setFormData({ name: '', region: '', crops: '', phone: '' });
+        
+        // Mostrar mensaje de agradecimiento por 2 segundos antes de redireccionar
+        setTimeout(() => {
+          window.location.href = 'https://drive.google.com/drive/folders/1E1IbLc2p3ou5PnAlboypLKl4luhnPc6p';
+        }, 1000);
+        
       } catch (error) {
         console.error('Error enviando el formulario:', error);
+        setIsSubmitting(false);
         // Aquí podrías mostrar un mensaje de error al usuario si quieres
       }
     }
   };
   
-
   return (
     <div className="bg-white p-6 md:p-8 rounded-xl shadow-lg">
       <h3 className="text-2xl font-bold mb-6">¡Quiero probar la app!</h3>
@@ -157,10 +164,17 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitSuccess }) => {
         
         <button 
           type="submit" 
-          className="w-full bg-green-700 hover:bg-green-800 text-white py-3 px-6 rounded-lg font-medium transition-all flex items-center justify-center gap-2"
+          disabled={isSubmitting}
+          className={`w-full ${isSubmitting ? 'bg-gray-500' : 'bg-green-700 hover:bg-green-800'} text-white py-3 px-6 rounded-lg font-medium transition-all flex items-center justify-center gap-2`}
         >
-          <span>¡Quiero probar la app!</span>
-          <Send className="w-5 h-5" />
+          {isSubmitting ? (
+            <span>Enviando...</span>
+          ) : (
+            <>
+              <span>¡Quiero probar la app!</span>
+              <Send className="w-5 h-5" />
+            </>
+          )}
         </button>
         
         <p className="text-xs text-gray-500 text-center">
