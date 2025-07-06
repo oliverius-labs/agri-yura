@@ -54,7 +54,7 @@ const BetaSignupSection: React.FC = () => {
               </div>
               <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
                 <Zap className="w-8 h-8 text-amber-500 mb-2" />
-                <p className="text-center text-sm">Funciona offline</p>
+                <p className="text-center text-sm">Mayor eficiencia</p>
               </div>
             </div>
           </div>

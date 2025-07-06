@@ -8,6 +8,7 @@ interface LeadFormProps {
 const LeadForm: React.FC<LeadFormProps> = ({ onSubmitSuccess }) => {
   const [formData, setFormData] = useState({
     name: '',
+    email: '',
     region: '',
     crops: '',
     phone: ''
@@ -21,6 +22,9 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitSuccess }) => {
     
     if (!formData.name.trim()) {
       newErrors.name = 'El nombre es obligatorio';
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = 'El correo es obligatorio';
     }
     
     if (!formData.region.trim()) {
@@ -78,11 +82,11 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitSuccess }) => {
         onSubmitSuccess();
         
         // Limpiar formulario después de enviar
-        setFormData({ name: '', region: '', crops: '', phone: '' });
+        setFormData({ name: '', email: '', region: '', crops: '', phone: '' });
         
         // Mostrar mensaje de agradecimiento por 2 segundos antes de redireccionar
         setTimeout(() => {
-          window.location.href = 'https://drive.google.com/drive/folders/1E1IbLc2p3ou5PnAlboypLKl4luhnPc6p';
+          window.location.href = 'https://wa.link/wqp6c5';
         }, 1000);
         
       } catch (error) {
@@ -112,6 +116,22 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitSuccess }) => {
             placeholder="Ingresa tu nombre"
           />
           {errors.name && <p className="mt-1 text-red-500 text-sm">{errors.name}</p>}
+        </div>
+
+        <div>
+          <label htmlFor="email" className="block mb-1 font-medium">
+            Correo electónico
+          </label>
+          <input
+            type="text"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className={`w-full px-4 py-3 rounded-lg border ${errors.email ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all`}
+            placeholder="Ingresa tu correo electónico"
+          />
+          {errors.email && <p className="mt-1 text-red-500 text-sm">{errors.email}</p>}
         </div>
         
         <div>
@@ -157,7 +177,7 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSubmitSuccess }) => {
             value={formData.phone}
             onChange={handleChange}
             className={`w-full px-4 py-3 rounded-lg border ${errors.phone ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all`}
-            placeholder="Ej: 3123456789"
+            placeholder="Ej: 59169123455"
           />
           {errors.phone && <p className="mt-1 text-red-500 text-sm">{errors.phone}</p>}
         </div>

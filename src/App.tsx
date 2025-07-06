@@ -13,7 +13,7 @@ function App() {
       <main>
         <HeroSection />
         <HowItWorksSection />
-        <TreatmentSection />
+        {/* <TreatmentSection /> */}
         <BetaSignupSection />
       </main>
       <Footer />

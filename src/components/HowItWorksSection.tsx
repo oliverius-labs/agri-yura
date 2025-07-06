@@ -137,20 +137,9 @@ const HowItWorksSection: React.FC = () => {
                   <div className="flex-grow">
                     <h3 className="text-2xl font-bold mb-4 text-gray-900">{step.title}</h3>
                     <p className="text-gray-600 mb-6 leading-relaxed">{step.description}</p>
-                    
-                    {/* Details */}
-                    <div className="space-y-3">
-                      {step.details.map((detail, i) => (
-                        <div key={i} className="flex items-center gap-2 text-sm text-gray-500">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                          <span>{detail}</span>
-                          Fácil y rápido
-                        </div>
-                      ))}
-                    </div>
+
                   </div>
                   
-                  {/* Active indicator */}
                  
                 </div>
               </div>

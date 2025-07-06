@@ -93,19 +93,20 @@ const HeroSection: React.FC = () => {
                 className="text-4xl md:text-5xl xl:text-6xl font-bold leading-tight"
                 style={{ color: brandColors.negro }}
               >
-                Detecta enfermedades en tus 
+                Detecta enfermedades en tus
+                <br />
                 <span 
                   className="text-transparent bg-clip-text bg-gradient-to-r"
                   style={{
                     backgroundImage: `linear-gradient(to right, ${brandColors.verdeProfundo}, ${brandColors.verdeHoja})`
                   }}
-                > cultivos</span>
+                >cultivos</span>
                 <br />
                 <span 
                   className="text-2xl md:text-3xl xl:text-4xl font-semibold"
                   style={{ color: `${brandColors.negro}80` }}
                 >
-                  gratuito e instantáneo
+                  de forma gratuita y rápida
                 </span>
               </h1>
               

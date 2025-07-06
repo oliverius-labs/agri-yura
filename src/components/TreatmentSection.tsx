@@ -210,7 +210,7 @@ const TreatmentSection = () => {
         <header className="text-center mb-12">
           <h1 id="treatments-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Tratamientos
-            <span className="block text-green-600">Personalizados</span>
+            <span className="block text-green-600">adaptados para tu región</span>
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
             Cada propuesta es una solución real, enviada por expertos agropecuarios,

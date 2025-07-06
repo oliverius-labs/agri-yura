@@ -10,16 +10,16 @@ const Footer: React.FC = () => {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <img src={logo} alt="Logo Yura Vision" className="h-8 w-8 object-contain" />
-              <span className="font-bold text-xl text-white">Yura Vision</span>
+              <span className="font-bold text-xl text-white">Yura Visión</span>
             </div>
             <p className="text-green-200 mb-6 max-w-md">
               Conectamos a los agricultores con tecnologías inteligentes para mejorar su productividad y proteger sus cultivos de forma sustentable.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-green-200 hover:text-white transition-colors">
+              <a href="https://www.instagram.com/yura.vision/" className="text-green-200 hover:text-white transition-colors">
                 <Instagram className="w-6 h-6" />
               </a>
-              <a href="https://www.facebook.com/yuravision" className="text-green-200 hover:text-white transition-colors">
+              <a href="https://www.facebook.com/yuravisi0n" className="text-green-200 hover:text-white transition-colors">
                 <Facebook className="w-6 h-6" />
               </a>
               <a href="#" className="text-green-200 hover:text-white transition-colors">
@@ -44,7 +44,7 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="font-bold text-lg mb-4">Contacto</h3>
             <ul className="space-y-3 text-green-200">
-              <li>soporte@yuravision.tech</li>
+              <li>yura.agrotecnologia@gmail.com</li>
               <li>+591 68612147</li>
               <li>Lunes a Viernes: 8am - 6pm</li>
             </ul>
@@ -66,7 +66,7 @@ const Footer: React.FC = () => {
         </div>
         
         <div className="border-t border-green-800 mt-12 pt-8 text-center text-green-400 text-sm">
-          <p>© {new Date().getFullYear()} Yura Vision. Todos los derechos reservados.</p>
+          <p>© {new Date().getFullYear()} Yura Visión. Todos los derechos reservados.</p>
         </div>
       </div>
     </footer>
