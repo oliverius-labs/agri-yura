@@ -1,6 +1,6 @@
 services:
   landing_page:
-    image: joseco/agri-yura
+    image: joseco/agri-yura:${TAG}
     ports:
       - "8085:80"
     networks:
