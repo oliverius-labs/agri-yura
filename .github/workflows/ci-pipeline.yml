@@ -15,7 +15,7 @@ jobs:
       contents: read
     outputs:
       tag: ${{ steps.define_tag.outputs.tag }}
-      
+
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -58,4 +58,4 @@ jobs:
         docker compose -f docker-compose.yml up -d
 
     - name: Verify landing page
-      run: curl -H https://yuravision.tech
+      run: curl -I https://yuravision.tech
