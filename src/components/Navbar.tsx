@@ -182,7 +182,7 @@ const Navbar: React.FC = () => {
               </div>
               <div className="flex flex-col">
                 <span className="font-bold text-xl text-white transition-all duration-500 group-hover:text-emerald-50">
-                YuraVisión
+                Yura Visión
                 </span>
                 <span className="text-xs font-medium tracking-wide text-emerald-100 opacity-90">
                 AI platform Agrotech
