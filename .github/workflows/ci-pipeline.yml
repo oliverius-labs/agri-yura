@@ -13,7 +13,9 @@ jobs:
     runs-on: [self-hosted]
     permissions:
       contents: read
-
+    outputs:
+      tag: ${{ steps.define_tag.outputs.tag }}
+      
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -30,7 +32,11 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Define TAG
-      run: echo "TAG=${{ github.run_number }}.${{ github.ref_name }}" >> $GITHUB_ENV
+      id: define_tag
+      run: |
+        TAG="${{ github.run_number }}.${{ github.ref_name }}"
+        echo "TAG=$TAG" >> $GITHUB_ENV
+        echo "tag=$TAG" >> $GITHUB_OUTPUT
 
     - name: Build and Push Image
       uses: docker/build-push-action@v5
@@ -48,7 +54,7 @@ jobs:
 
     - name: Start new version
       run: |
-        export TAG=${{ env.TAG }}
+        export TAG=${{ needs.build-and-push.outputs.tag }}
         docker compose -f docker-compose.yml up -d
 
     - name: Verify landing page
