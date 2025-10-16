@@ -47,7 +47,9 @@ jobs:
       run: docker compose down -v || true
 
     - name: Start new version
-      run: docker compose -f docker-compose.yml up -d
+      run: |
+        export TAG=${{ env.TAG }}
+        docker compose -f docker-compose.yml up -d
 
     - name: Verify landing page
       run: curl -H https://yuravision.tech
