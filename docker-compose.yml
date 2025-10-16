@@ -1,0 +1,11 @@
+services:
+  landing_page:
+    image: joseco/agri-yura
+    ports:
+      - "8085:80"
+    networks:
+      - n8n_evoapi
+
+networks:
+  n8n_evoapi:
+    external: true
