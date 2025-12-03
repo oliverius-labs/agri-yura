@@ -9,7 +9,7 @@ env:
   IMAGE_NAME: joseco/agri-yura
 
 jobs:
-  build-and-push:
+  build-and-test:
     runs-on: [self-hosted]
     permissions:
       contents: read
@@ -38,23 +38,34 @@ jobs:
         echo "TAG=$TAG" >> $GITHUB_ENV
         echo "tag=$TAG" >> $GITHUB_OUTPUT
 
-    - name: Build and Push Image
+    - name: Build Image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: false
+        tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+
+  push-and-deploy:
+    runs-on: [self-hosted]
+    needs: build-and-test
+    steps:
+    - name: Set Image Name and Tag
+      run: |
+        export TAG=${{ needs.build-and-test.outputs.tag }}
+        export IMAGE_NAME=${{ needs.build-and-test.outputs.tag }}
+
+    - name: Push Image
       uses: docker/build-push-action@v5
       with:
         context: .
         push: true
-        tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+        tags: ${{ IMAGE_NAME }}:${{ TAG }}
 
-  deploy:
-    runs-on: [self-hosted]
-    needs: build-and-push
-    steps:
     - name: Stop previous services
       run: docker compose down -v || true
 
     - name: Start new version
       run: |
-        export TAG=${{ needs.build-and-push.outputs.tag }}
         docker compose -f docker-compose.yml up -d
 
     - name: Verify landing page
