@@ -9,8 +9,8 @@ env:
   IMAGE_NAME: joseco/agri-yura
 
 jobs:
-  build-and-test:
-    runs-on: [ubuntu-22-04]
+  build-scan-push:
+    runs-on: [self-hosted]
     permissions:
       contents: read
     outputs:
@@ -19,9 +19,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-
-    - name: Setup Docker Buildx
-      uses: docker/setup-buildx-action@v3
 
     - name: Login in to Docker Hub
       if: github.event_name != 'pull_request'
@@ -38,34 +35,39 @@ jobs:
         echo "TAG=$TAG" >> $GITHUB_ENV
         echo "tag=$TAG" >> $GITHUB_OUTPUT
 
-    - name: Build Image
+    - name: Build Image (load into local Docker)
       uses: docker/build-push-action@v5
       with:
         context: .
-        push: false
         tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+        push: false
+        load: true
+    
+    - name: Scan image with Trivy
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+        severity: CRITICAL,HIGH
+        ignore-unfixed: true
+        exit-code: 1   # Falla el pipeline si encuentra vulnerabilidades serias
 
-  push-and-deploy:
-    runs-on: [ubuntu-22-04]
-    needs: build-and-test
-    steps:
-    - name: Set Image Name and Tag
-      run: |
-        export TAG=${{ needs.build-and-test.outputs.tag }}
-        export IMAGE_NAME=${{ needs.build-and-test.outputs.tag }}
-
-    - name: Push Image
+    - name: Push image (only if scan passed)
       uses: docker/build-push-action@v5
       with:
         context: .
+        tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
         push: true
-        tags: ${{ IMAGE_NAME }}:${{ TAG }}
 
+  deploy:
+    runs-on: [self-hosted]
+    needs: build-scan-push
+    steps:
     - name: Stop previous services
       run: docker compose down -v || true
 
     - name: Start new version
       run: |
+        export TAG=${{ needs.build-scan-push.outputs.tag }}
         docker compose -f docker-compose.yml up -d
 
     - name: Verify landing page
