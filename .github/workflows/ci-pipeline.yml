@@ -10,7 +10,7 @@ env:
 
 jobs:
   build-and-test:
-    runs-on: [self-hosted]
+    runs-on: [ubuntu-22-04]
     permissions:
       contents: read
     outputs:
@@ -46,7 +46,7 @@ jobs:
         tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
   push-and-deploy:
-    runs-on: [self-hosted]
+    runs-on: [ubuntu-22-04]
     needs: build-and-test
     steps:
     - name: Set Image Name and Tag
