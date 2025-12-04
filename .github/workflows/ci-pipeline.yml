@@ -68,7 +68,7 @@ jobs:
       with:
         name: Trivy Scan
         path: trivy-output/trivy_junit.xml
-        reporter: junit
+        reporter: java-junit
 
 
     - name: Push image (only if scan passed)
