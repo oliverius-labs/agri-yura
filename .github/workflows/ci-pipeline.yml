@@ -44,13 +44,32 @@ jobs:
         load: true
     
     - name: Scan image with Trivy
-      uses: aquasecurity/trivy-action@master
+      run: |
+        mkdir -p trivy-outputs
+        docker run --rm \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          -v $PWD/trivy-output:/output \
+          aquasec/trivy:0.68.1 image \
+            --severity HIGH,CRITICAL \
+            --ignore-unfixed \
+            --format template \
+            --template "@contrib/junit.tpl" \
+            --output /output/trivy_junit.xml \
+            ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+    
+    - name: Upload Trivy Results
+      uses: actions/upload-artifact@v4
       with:
-        image-ref: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
-        format: 'table'
-        severity: CRITICAL
-        ignore-unfixed: true
-        exit-code: 1   # Falla el pipeline si encuentra vulnerabilidades serias
+        name: trivy-scan
+        path: trivy-output/
+
+    - name: Publish Trivy Scan Results
+      uses: dorny/test-reporter@v1
+      with:
+        name: Trivy Scan
+        path: trivy-output/trivy_junit.xml
+        reporter: junit
+
 
     - name: Push image (only if scan passed)
       uses: docker/build-push-action@v5
