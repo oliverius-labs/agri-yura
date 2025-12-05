@@ -95,7 +95,10 @@ jobs:
     needs: build-scan-push
     steps:
     - name: Stop previous services
-      run: docker compose down -v || true
+      run: |
+        pwd
+        ls -lht
+        docker compose down -v || true
 
     - name: Start new version
       run: |
