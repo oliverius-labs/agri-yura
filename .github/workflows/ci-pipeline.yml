@@ -55,7 +55,6 @@ jobs:
     - name: Scan image with Trivy
       run: |
         docker run --rm \
-          -u ${UID}:${GID} \
           -v /var/run/docker.sock:/var/run/docker.sock \
           -v ${{ env.TMP_DIR }}:/output \
           aquasec/trivy:0.68.1 image \
