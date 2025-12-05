@@ -75,7 +75,7 @@ jobs:
       uses: dorny/test-reporter@v1
       with:
         name: Trivy Scan
-        path: $TMP/trivy_junit.xml
+        path: ${{ env.TMP_DIR }}/trivy_junit.xml
         reporter: java-junit
 
 
