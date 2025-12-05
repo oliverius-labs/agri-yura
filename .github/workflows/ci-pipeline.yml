@@ -7,11 +7,10 @@ on:
 env:
   REGISTRY: docker.io
   IMAGE_NAME: joseco/agri-yura
-  TRIVY_CACHE_DIR: /tmp/trivy-cache
 
 jobs:
   build-scan-push:
-    runs-on: [ubuntu-latest]
+    runs-on: [self-hosted]
     permissions:
       contents: read
       security-events: write
@@ -37,52 +36,57 @@ jobs:
         echo "TAG=$TAG" >> $GITHUB_ENV
         echo "tag=$TAG" >> $GITHUB_OUTPUT
 
-    - name: Build Image (load into local Docker)
+    - name: Build Docker Image
       uses: docker/build-push-action@v5
       with:
         context: .
         tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
         push: false
         load: true
-    - name: Run Trivy vulnerability scan
-      uses: aquasecurity/trivy-action@0.30.0
-      with:
-        image-ref: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
-        format: 'sarif'
-        exit-code: 0
-        # severity: 'CRITICAL'
-        severity: 'CRITICAL,HIGH'
-        output: 'trivy-results.sarif'
+
+    # - name: Run Trivy vulnerability scan
+    #   uses: aquasecurity/trivy-action@0.30.0
+    #   with:
+    #     image-ref: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+    #     format: 'sarif'
+    #     exit-code: 0
+    #     # severity: 'CRITICAL'
+    #     severity: 'CRITICAL,HIGH'
+    #     output: 'trivy-results.sarif'
  
-    - name: Upload Trivy scan results to GitHub Security tab
+    # - name: Upload Trivy scan results to GitHub Security tab
+    #   uses: github/codeql-action/upload-sarif@v4
+    #   with:
+    #       sarif_file: 'trivy-results.sarif'
+    
+    - name: Prepare directories
+      run: |
+        mkdir -p trivy-tmp
+        echo "TMP_DIR=$(pwd)/trivy-tmp" >> $GITHUB_ENV
+
+    - name: Run Trivy vulnerability scan (native Docker)
+      run: |
+        docker run --rm \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          -v "${{ env.TMP_DIR }}:/output" \
+          aquasec/trivy:0.68.1 image \
+            --severity HIGH,CRITICAL \
+            --ignore-unfixed \
+            --format sarif \
+            --output /output/trivy-results.sarif \
+            "${{ env.IMAGE_NAME }}:${{ env.TAG }}"
+
+    - name: Upload raw SARIF artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: trivy-sarif-raw
+        path: ${{ env.TMP_DIR }}/trivy-results.sarif
+
+    - name: Upload SARIF to GitHub Security
       uses: github/codeql-action/upload-sarif@v4
       with:
-          sarif_file: 'trivy-results.sarif'
-          # token: ${{ secrets.GH_SECURITY_TOKEN }}
-    
-    # - name: Scan image with Trivy (SARIF)
-    #   run: |
-    #     docker run --rm \
-    #       -v /var/run/docker.sock:/var/run/docker.sock \
-    #       -v ${{ env.TMP_DIR }}:/output \
-    #       aquasec/trivy:0.68.1 image \
-    #         --severity HIGH,CRITICAL \
-    #         --ignore-unfixed \
-    #         --format sarif \
-    #         --output /output/trivy.sarif \
-    #         ${{ env.IMAGE_NAME }}:${{ env.TAG }}
-    
-    # - name: Upload Trivy Results
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: trivy-scan
-    #     path: ${{ env.TMP_DIR }}
-    # - name: Upload SARIF to GitHub Security
-    #   uses: github/codeql-action/upload-sarif@v3
-    #   with:
-    #     sarif_file: ${{ env.TMP_DIR }}/trivy.sarif
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.PAT }}
+        sarif_file: ${{ env.TMP_DIR }}/trivy-results.sarif
+   
 
 
     - name: Push image (only if scan passed)
