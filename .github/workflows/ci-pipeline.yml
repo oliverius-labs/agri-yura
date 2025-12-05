@@ -1,4 +1,4 @@
-name: Deploy with Docker Compose
+name: Container Security Analysis
 
 on:
   push:
@@ -7,10 +7,11 @@ on:
 env:
   REGISTRY: docker.io
   IMAGE_NAME: joseco/agri-yura
+  TRIVY_CACHE_DIR: /tmp/trivy-cache
 
 jobs:
   build-scan-push:
-    runs-on: [ubuntu-22.04]
+    runs-on: [self-hosted]
     permissions:
       contents: read
       security-events: write
@@ -43,35 +44,43 @@ jobs:
         tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
         push: false
         load: true
+    - name: Run Trivy vulnerability scan
+      uses: aquasecurity/trivy-action@0.30.0
+      with:
+        image-ref: 'ttapp:latest'
+        format: 'sarif'
+        exit-code: 0
+        severity: 'CRITICAL,HIGH'
+        output: 'trivy-results.sarif'
+ 
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+          sarif_file: 'trivy-results.sarif'
     
-    - name: Prepare Trivy temp directory
-      run: |
-        mkdir -p trivy-tmp
-        echo "TMP_DIR=$(pwd)/trivy-tmp" >> $GITHUB_ENV
-    
-    - name: Scan image with Trivy (SARIF)
-      run: |
-        docker run --rm \
-          -v /var/run/docker.sock:/var/run/docker.sock \
-          -v ${{ env.TMP_DIR }}:/output \
-          aquasec/trivy:0.68.1 image \
-            --severity HIGH,CRITICAL \
-            --ignore-unfixed \
-            --format sarif \
-            --output /output/trivy.sarif \
-            ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+    # - name: Scan image with Trivy (SARIF)
+    #   run: |
+    #     docker run --rm \
+    #       -v /var/run/docker.sock:/var/run/docker.sock \
+    #       -v ${{ env.TMP_DIR }}:/output \
+    #       aquasec/trivy:0.68.1 image \
+    #         --severity HIGH,CRITICAL \
+    #         --ignore-unfixed \
+    #         --format sarif \
+    #         --output /output/trivy.sarif \
+    #         ${{ env.IMAGE_NAME }}:${{ env.TAG }}
     
     # - name: Upload Trivy Results
     #   uses: actions/upload-artifact@v4
     #   with:
     #     name: trivy-scan
     #     path: ${{ env.TMP_DIR }}
-    - name: Upload SARIF to GitHub Security
-      uses: github/codeql-action/upload-sarif@v3
-      with:
-        sarif_file: ${{ env.TMP_DIR }}/trivy.sarif
-      env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
+    # - name: Upload SARIF to GitHub Security
+    #   uses: github/codeql-action/upload-sarif@v3
+    #   with:
+    #     sarif_file: ${{ env.TMP_DIR }}/trivy.sarif
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.PAT }}
 
     - name: Push image (only if scan passed)
       uses: docker/build-push-action@v5
