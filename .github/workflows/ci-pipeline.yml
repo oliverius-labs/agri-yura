@@ -103,7 +103,7 @@ jobs:
     - name: Start new version
       run: |
         export TAG=${{ needs.build-scan-push.outputs.tag }}
-        docker compose -f docker-compose.yml up -d
+        docker compose up -d
 
     - name: Verify landing page
       run: curl -I https://yuravision.tech
