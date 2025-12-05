@@ -43,18 +43,26 @@ jobs:
         push: false
         load: true
     
+    - name: Prepare Trivy temp directory
+      run: |
+        mkdir -p trivy-tmp
+        echo "UID=$(id -u)" >> $GITHUB_ENV
+        echo "GID=$(id -g)" >> $GITHUB_ENV
+        curl -sSL -o trivy-tmp/junit.tpl \
+          https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/junit.tpl
+        echo "TMP_DIR=$(pwd)/trivy-tmp" >> $GITHUB_ENV
+    
     - name: Scan image with Trivy
       run: |
-        export TMP="$(mktemp -d)"
-        mkdir -p $TMP
         docker run --rm \
+          -u ${UID}:${GID} \
           -v /var/run/docker.sock:/var/run/docker.sock \
-          -v $PWD/$TMP:/output \
+          -v ${{ env.TMP_DIR }}:/output \
           aquasec/trivy:0.68.1 image \
             --severity HIGH,CRITICAL \
             --ignore-unfixed \
             --format template \
-            --template "@contrib/junit.tpl" \
+            --template "@/output/junit.tpl" \
             --output /output/trivy_junit.xml \
             ${{ env.IMAGE_NAME }}:${{ env.TAG }}
     
@@ -62,7 +70,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: trivy-scan
-        path: $TMP/
+        path: ${{ env.TMP_DIR }}
 
     - name: Publish Trivy Scan Results
       uses: dorny/test-reporter@v1
