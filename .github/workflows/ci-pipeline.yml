@@ -82,6 +82,7 @@ jobs:
     #   env:
     #     GITHUB_TOKEN: ${{ secrets.PAT }}
 
+
     - name: Push image (only if scan passed)
       uses: docker/build-push-action@v5
       with:
