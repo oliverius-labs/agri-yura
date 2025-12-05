@@ -13,6 +13,7 @@ jobs:
     runs-on: [self-hosted]
     permissions:
       contents: read
+      security-events: write
     outputs:
       tag: ${{ steps.define_tag.outputs.tag }}
 
