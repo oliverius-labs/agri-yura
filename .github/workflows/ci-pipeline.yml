@@ -47,7 +47,7 @@ jobs:
     - name: Run Trivy vulnerability scan
       uses: aquasecurity/trivy-action@0.30.0
       with:
-        image-ref: 'ttapp:latest'
+        image-ref: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
         format: 'sarif'
         exit-code: 0
         severity: 'CRITICAL,HIGH'
