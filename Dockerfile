@@ -7,7 +7,7 @@ COPY . .
 RUN yarn build
 
 # --- Etapa de producción ---
-FROM nginx:alpine-otel
+FROM nginx:stable-alpine3.21-perl
 WORKDIR /usr/share/nginx/html
 COPY --from=builder /app/dist .
 COPY nginx.conf /etc/nginx/conf.d/default.conf
