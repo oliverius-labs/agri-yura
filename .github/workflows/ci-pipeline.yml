@@ -43,21 +43,6 @@ jobs:
         tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
         push: false
         load: true
-
-    # - name: Run Trivy vulnerability scan
-    #   uses: aquasecurity/trivy-action@0.30.0
-    #   with:
-    #     image-ref: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
-    #     format: 'sarif'
-    #     exit-code: 0
-    #     # severity: 'CRITICAL'
-    #     severity: 'CRITICAL,HIGH'
-    #     output: 'trivy-results.sarif'
- 
-    # - name: Upload Trivy scan results to GitHub Security tab
-    #   uses: github/codeql-action/upload-sarif@v4
-    #   with:
-    #       sarif_file: 'trivy-results.sarif'
     
     - name: Prepare directories
       run: |
@@ -87,8 +72,6 @@ jobs:
       with:
         sarif_file: ${{ env.TMP_DIR }}/trivy-results.sarif
    
-
-
     - name: Push image (only if scan passed)
       uses: docker/build-push-action@v5
       with:
@@ -105,15 +88,11 @@ jobs:
 
     - name: Stop previous services
       run: |
-        pwd
-        ls -lht
         docker compose down -v || true
 
     - name: Start new version
       run: |
         export TAG=${{ needs.build-scan-push.outputs.tag }}
-        ls -lha
-        pwd
         docker compose -f docker-compose.yml up -d
 
     - name: Verify landing page
