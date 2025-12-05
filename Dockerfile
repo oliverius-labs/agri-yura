@@ -7,7 +7,7 @@ COPY . .
 RUN yarn build
 
 # --- Etapa de producción ---
-FROM nginx:alpine2.22
+FROM nginx:1.7.11-alpine
 WORKDIR /usr/share/nginx/html
 COPY --from=builder /app/dist .
 COPY nginx.conf /etc/nginx/conf.d/default.conf
