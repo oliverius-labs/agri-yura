@@ -45,10 +45,11 @@ jobs:
     
     - name: Scan image with Trivy
       run: |
-        mkdir -p trivy-outputs
+        export TMP="$(mktemp -d)"
+        mkdir -p $TMP
         docker run --rm \
           -v /var/run/docker.sock:/var/run/docker.sock \
-          -v $PWD/trivy-output:/output \
+          -v $PWD/$TMP:/output \
           aquasec/trivy:0.68.1 image \
             --severity HIGH,CRITICAL \
             --ignore-unfixed \
@@ -61,13 +62,13 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: trivy-scan
-        path: trivy-output/
+        path: $TMP/
 
     - name: Publish Trivy Scan Results
       uses: dorny/test-reporter@v1
       with:
         name: Trivy Scan
-        path: trivy-output/trivy_junit.xml
+        path: $TMP/trivy_junit.xml
         reporter: java-junit
 
 
