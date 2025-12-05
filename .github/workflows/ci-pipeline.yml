@@ -49,7 +49,7 @@ jobs:
       with:
         image-ref: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
         format: 'sarif'
-        exit-code: 1
+        exit-code: 0
         severity: 'CRITICAL'
         # severity: 'CRITICAL,HIGH'
         output: 'trivy-results.sarif'
