@@ -70,6 +70,8 @@ jobs:
       uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: ${{ env.TMP_DIR }}/trivy.sarif
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT }}
 
     - name: Push image (only if scan passed)
       uses: docker/build-push-action@v5
